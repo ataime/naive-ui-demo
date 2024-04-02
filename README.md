@@ -142,3 +142,76 @@ npm run build 或者 yarn build
 
 ## 维护者
 [@Ah jung](https://github.com/jekip)
+
+
+
+
+# 个人开发经验
+### 修改Role页面弹窗，改动的代码
+![alt text](readme/image-4.png)
+
+## 需要添加新功能页时，修改如下代码
+![alt text](readme/image-1.png)
+![alt text](readme/image-2.png)
+
+### 添加点击事件
+![alt text](readme/image-5.png)
+控制 showModal.value = true 值
+![alt text](readme/image-6.png)
+
+### 弹窗样式
+```
+    <n-modal v-model:show="showModal" :show-icon="false" preset="dialog" :title="editRoleTitle">
+      <div class="py-3 role-list">
+        <n-form
+          :model="formParams"
+          :rules="rules"
+          ref="formRef"
+          label-placement="left"
+          :label-width="80"
+          class="py-4"
+        >
+
+        <n-form-item label="名称" path="name">
+          <n-input placeholder="请输入名称" v-model:value="formParams.name" />
+        </n-form-item>
+        <n-form-item label="地址" path="address">
+          <n-input type="textarea" placeholder="请输入地址" v-model:value="formParams.address" />
+        </n-form-item>
+        <n-form-item label="日期" path="date">
+            <n-date-picker
+              type="datetime"
+              placeholder="请选择日期"
+              v-model:value="formParams.date"
+            />
+        </n-form-item>
+        </n-form>
+      </div>
+
+      <template #action>
+        <n-space>
+          <n-button type="info" ghost icon-placement="left" @click="packHandle">
+            全部{{ expandedKeys.length ? '收起' : '展开' }}
+          </n-button>
+
+          <n-button type="info" ghost icon-placement="left" @click="checkedAllHandle">
+            全部{{ checkedAll ? '取消' : '选择' }}
+          </n-button>
+          <n-button type="primary" :loading="formBtnLoading" @click="confirmForm">提交</n-button>
+        </n-space>
+      </template>
+
+    </n-modal>
+```
+
+### 页面调用接口数据
+```
+  onMounted(async () => {
+    const treeRoleList = await getRoleList();
+    expandedKeys.value = treeRoleList.list.map((item) => item.key);
+    treeData.value = treeRoleList.list;
+    console.log("treeData" , treeData);
+  });
+```
+
+添加功能页，参考上面的代码步骤.

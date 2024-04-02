@@ -15,7 +15,7 @@
         @update:checked-row-keys="onCheckedRow"
       >
         <template #tableTitle>
-          <n-button type="primary">
+          <n-button type="primary" @click="addTable">
             <template #icon>
               <n-icon>
                 <PlusOutlined />
@@ -32,20 +32,32 @@
     </n-card>
 
     <n-modal v-model:show="showModal" :show-icon="false" preset="dialog" :title="editRoleTitle">
-      <div class="py-3 menu-list">
-        <n-tree
-          block-line
-          cascade
-          checkable
-          :virtual-scroll="true"
-          :data="treeData"
-          :expandedKeys="expandedKeys"
-          :checked-keys="checkedKeys"
-          style="max-height: 950px; overflow: hidden"
-          @update:checked-keys="checkedTree"
-          @update:expanded-keys="onExpandedKeys"
-        />
+      <div class="py-3 role-list">
+        <n-form
+          :model="formParams"
+          :rules="rules"
+          ref="formRef"
+          label-placement="left"
+          :label-width="80"
+          class="py-4"
+        >
+
+        <n-form-item label="名称" path="name">
+          <n-input placeholder="请输入名称" v-model:value="formParams.name" />
+        </n-form-item>
+        <n-form-item label="地址" path="address">
+          <n-input type="textarea" placeholder="请输入地址" v-model:value="formParams.address" />
+        </n-form-item>
+        <n-form-item label="日期" path="date">
+            <n-date-picker
+              type="datetime"
+              placeholder="请选择日期"
+              v-model:value="formParams.date"
+            />
+        </n-form-item>
+        </n-form>
       </div>
+
       <template #action>
         <n-space>
           <n-button type="info" ghost icon-placement="left" @click="packHandle">
@@ -58,7 +70,9 @@
           <n-button type="primary" :loading="formBtnLoading" @click="confirmForm">提交</n-button>
         </n-space>
       </template>
+
     </n-modal>
+
   </div>
 </template>
 
@@ -67,17 +81,17 @@
   import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { getRoleList } from '@/api/system/role';
-  import { getMenuList } from '@/api/system/menu';
   import { columns } from './columns';
   import { PlusOutlined } from '@vicons/antd';
   import { getTreeAll } from '@/utils';
   import { useRouter } from 'vue-router';
-
+  import { type FormRules } from 'naive-ui';
   const router = useRouter();
   const message = useMessage();
   const actionRef = ref();
 
-  const showModal = ref(false);
+    const showModal = ref(false);
+    
   const formBtnLoading = ref(false);
   const checkedAll = ref(false);
   const editRoleTitle = ref('');
@@ -85,6 +99,34 @@
   const expandedKeys = ref([]);
   const checkedKeys = ref(['console', 'step-form']);
 
+  const formParams = reactive({
+    id: 1,
+    name: '',
+    explain: '',
+    isDefault: '',
+    menu_keys: '',
+  });
+
+  const rules: FormRules = {
+    name: {
+      required: true,
+      trigger: ['blur', 'input'],
+      message: '请输入名称',
+    },
+    address: {
+      required: true,
+      trigger: ['blur', 'input'],
+      message: '请输入地址',
+    },
+    date: {
+      type: 'number',
+      required: true,
+      trigger: ['blur', 'change'],
+      message: '请选择日期',
+    },
+  };
+
+  
   const params = reactive({
     pageSize: 5,
     name: 'xiaoMa',
@@ -159,6 +201,12 @@
     }, 200);
   }
 
+  
+  function addTable() {
+    showModal.value = true;
+    console.log('点击了添加');
+  }
+
   function handleEdit(record: Recordable) {
     console.log('点击了编辑', record);
     router.push({ name: 'basic-info', params: { id: record.id } });
@@ -202,10 +250,12 @@
   }
 
   onMounted(async () => {
-    const treeMenuList = await getMenuList();
-    expandedKeys.value = treeMenuList.list.map((item) => item.key);
-    treeData.value = treeMenuList.list;
+    const treeRoleList = await getRoleList();
+    expandedKeys.value = treeRoleList.list.map((item) => item.key);
+    treeData.value = treeRoleList.list;
+    console.log("treeData" , treeData);
   });
+  
 </script>
 
 <style lang="less" scoped></style>
