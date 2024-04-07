@@ -12,14 +12,53 @@ export interface BasicPageParams {
   total: number;
 }
 
+
+/**
+ * @description: 获取管理员信息
+ */
+export function getAdminInfo() {
+  return http.request({
+    url: '/admin_info',
+    method: 'GET',
+  });
+}
+
+
 /**
  * @description: 获取用户信息
  */
-export function getUserInfo() {
+export function getUserList() {
   return http.request({
-    url: '/admin_info',
-    method: 'get',
+    url: '/user/list',
+    method: 'GET',
   });
+}
+
+
+/**
+ * @description: 获取用户信息
+ */
+export function getMatchmakerList() {
+  return http.request({
+    url: '/matchmaker/list',
+    method: 'GET',
+  });
+}
+
+/**
+ * @description: 用户新增
+ */
+export function addUser(params) {
+  return http.request(
+    {
+      url: '/users',
+      method: 'POST',
+      params,
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
 }
 
 /**

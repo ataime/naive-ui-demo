@@ -215,3 +215,66 @@ npm run build 或者 yarn build
 ```
 
 添加功能页，参考上面的代码步骤.
+
+## 接口请求
+```
+触发事件:
+<n-button type="primary" :loading="formBtnLoading" @click="confirmForm">提交</n-button>
+
+方法实现：
+  function confirmForm(e: any) {
+    e.preventDefault();
+    formBtnLoading.value = true;
+    setTimeout(async () => {
+      showModal.value = false;
+      // ToDo 调用接口，实现数据提交
+      console.log('formParams', formParams);
+      let res = await addUser(formParams);
+      console.log(res);
+
+      message.success('提交成功');
+      reloadTable();
+      formBtnLoading.value = false;
+    }, 200);
+  }
+
+
+配置接口
+/**
+ * @description: 用户新增
+ */
+export function addUser(params) {
+  return http.request(
+    {
+      url: '/users',
+      method: 'POST',
+      params,
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+
+配置代理
+VITE_PROXY=[["/api","http://127.0.0.1:8002"]]
+
+
+接口返回数据的格式要求：
+{
+    "code": 200,
+    "message": "success",
+    "result": {
+        "page": 0,
+        "page_count": 0,
+        "page_size": 0,
+        "list": [
+            {
+                "name": "test1",
+                "id": 1
+            }
+        ]
+    }
+}
+
+```

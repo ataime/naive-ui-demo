@@ -50,6 +50,14 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/system/user/user.vue'),
       },
+      {
+        path: 'matchmaker',
+        name: 'system_matchmaker',
+        meta: {
+          title: '红管理',
+        },
+        component: () => import('@/views/system/matchmaker/matchmaker.vue'),
+      },
     ],
   },
 ];

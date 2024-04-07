@@ -92,7 +92,7 @@
   import { useTime } from '@/hooks/useTime';
   import { useBattery } from '@/hooks/useBattery';
   import { useScreenLockStore } from '@/store/modules/screenLock';
-  import { UserInfoType, useUserStore } from '@/store/modules/user';
+  import { UserAdminType, useUserStore } from '@/store/modules/user';
 
   export default defineComponent({
     name: 'ScreenLock',
@@ -117,7 +117,7 @@
       const route = useRoute();
 
       const { battery, batteryStatus, calcDischargingTime, calcChargingTime } = useBattery();
-      const userInfo: UserInfoType = userStore.getUserInfo || {};
+      const userInfo: UserAdminType = userStore.getAdminInfo || {};
       const username = userInfo['username'] || '';
       const state = reactive({
         showLogin: false,

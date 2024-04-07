@@ -3,10 +3,10 @@ import { store } from '@/store';
 import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED } from '@/store/mutation-types';
 import { ResultEnum } from '@/enums/httpEnum';
 
-import { getUserInfo as getUserInfoApi, login } from '@/api/system/user';
+import { getAdminInfo as getAdminInfoApi, login } from '@/api/system/user';
 import { storage } from '@/utils/Storage';
 
-export type UserInfoType = {
+export type UserAdminType = {
   // TODO: add your own data
   name: string;
   email: string;
@@ -18,7 +18,7 @@ export interface IUserState {
   welcome: string;
   avatar: string;
   permissions: any[];
-  info: UserInfoType;
+  info: UserAdminType;
 }
 
 export const useUserStore = defineStore({
@@ -44,7 +44,7 @@ export const useUserStore = defineStore({
     getPermissions(): [any][] {
       return this.permissions;
     },
-    getUserInfo(): UserInfoType {
+    getAdminInfo(): UserAdminType {
       return this.info;
     },
   },
@@ -58,7 +58,7 @@ export const useUserStore = defineStore({
     setPermissions(permissions) {
       this.permissions = permissions;
     },
-    setUserInfo(info: UserInfoType) {
+    setUserInfo(info: UserAdminType) {
       this.info = info;
     },
     // 登录
@@ -78,7 +78,7 @@ export const useUserStore = defineStore({
 
     // 获取用户信息
     async getInfo() {
-      const result = await getUserInfoApi();
+      const result = await getAdminInfoApi();
       if (result.permissions && result.permissions.length) {
         const permissionsList = result.permissions;
         this.setPermissions(permissionsList);
